@@ -1,9 +1,9 @@
 ﻿using SpotifyCompanion.Models;
 using SpotifyCompanion.Utils;
 
-namespace SpotifyCompanion.Track
+namespace SpotifyCompanion.Controllers
 {
-    public static class Track
+    public static class TrackController
     {
         private static readonly string _entrypoint = "https://api.spotify.com/v1/tracks";
         public static async Task<Models.Track> GetTrack(string id)

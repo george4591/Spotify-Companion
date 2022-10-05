@@ -18,8 +18,8 @@ namespace SpotifyCompanion.Utils
                 Content = content ?? EmptyContent
             };
 
-            using HttpResponseMessage response = await Client.client.SendAsync(request);
-            EnsureSuccessfulRequest(response);
+            using HttpResponseMessage response = await App.Client.SendAsync(request);
+            response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadAsAsync<T>();
         }
@@ -46,25 +46,7 @@ namespace SpotifyCompanion.Utils
 
         public static async Task Delete(string endpoint, HttpContent? requestBody = null)
         {
-            // var request = new HttpRequestMessage
-            // {
-            //     Method = HttpMethod.Delete,
-            //     RequestUri = new Uri(endpoint),
-            //     Content = requestBody
-            // };
-            //
-            // using HttpResponseMessage response = await Client.client.SendAsync(request);
-            // EnsureSuccessfulRequest(response);
-
             await SendRequest<object>(HttpMethod.Delete, endpoint, requestBody);
-        }
-
-        private static void EnsureSuccessfulRequest(HttpResponseMessage response)
-        {
-            if (!response.IsSuccessStatusCode)
-            {
-                Console.WriteLine($"Error {(int) response.StatusCode} - {response.ReasonPhrase}");
-            }
         }
     }
 }

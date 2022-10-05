@@ -9,14 +9,16 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using SpotifyCompanion.Utils;
 using System.Diagnostics;
+using System.Security.Principal;
 
 namespace SpotifyCompanion
 {
     public static class OAuth2
     {
-        private static readonly string _entrypoint = "https://accounts.spotify.com";
+        private const string Entrypoint = "https://accounts.spotify.com";
+        private const string TokenEndpoint = $"{Entrypoint}/api/token";
         private static AuthResponse _authResponse;
-        public static AuthResponse Authorize(string clientId, string clientSecret)
+        public static AuthResponse Authorize(string clientId)
         {
             var scopes = new List<string>
             {
@@ -40,7 +42,7 @@ namespace SpotifyCompanion
 
             Func<KeyValuePair<string, string>, string> concatenatePair = pair => $"{pair.Key}={System.Web.HttpUtility.UrlEncode(pair.Value)}";
             var queryString = string.Join("&", requestData.Select(pair => concatenatePair(pair)));
-            var url = $"{_entrypoint}/authorize?{queryString}";
+            var url = $"{Entrypoint}/authorize?{queryString}";
 
             Process.Start(new ProcessStartInfo { FileName = url, UseShellExecute = true });
 
@@ -77,7 +79,6 @@ namespace SpotifyCompanion
 
         private static async Task<AuthResponse> GetToken(string code)
         {
-            var url = $"{_entrypoint}/api/token";
             var requestData = new Dictionary<string, string>
             {
                 { "grant_type", "authorization_code" },
@@ -87,11 +88,10 @@ namespace SpotifyCompanion
 
             var requestBody = new FormUrlEncodedContent(requestData);
 
-            return await HttpRequest.Post<AuthResponse>(url, requestBody);
+            return await HttpRequest.Post<AuthResponse>(TokenEndpoint, requestBody);
         }
         public static async Task<AuthResponse> RefreshAccessToken(string refreshToken)
         {
-            var url = $"{_entrypoint}/api/token";
             var requestData = new Dictionary<string, string>
             {
                 { "grant_type", "refresh_token" },
@@ -100,7 +100,7 @@ namespace SpotifyCompanion
 
             var requestBody = new FormUrlEncodedContent(requestData);
 
-            return await HttpRequest.Post<AuthResponse>(url, requestBody);
+            return await HttpRequest.Post<AuthResponse>(TokenEndpoint, requestBody);
         }
 
 

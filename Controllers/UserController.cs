@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
 using SpotifyCompanion.Utils;
 
-namespace SpotifyCompanion.User
+namespace SpotifyCompanion.Controllers
 {
-    public static class User
+    public static class UserController
     {
         private static readonly string _entrypoint = "https://api.spotify.com/v1";
         public static async Task<Models.User> GetCurrentUser()

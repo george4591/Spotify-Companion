@@ -1,9 +1,9 @@
 ﻿using SpotifyCompanion.Models;
 using SpotifyCompanion.Utils;
 
-namespace SpotifyCompanion.Player
+namespace SpotifyCompanion.Controllers
 {
-    public static class Player
+    public static class PlayerController
     {
         private static readonly string _entrypoint = "https://api.spotify.com/v1/me/player";
         private static readonly List<string> repeatModes = new List<string> {"off", "track", "context"};

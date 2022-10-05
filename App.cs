@@ -2,28 +2,29 @@
 using SpotifyCompanion.Models;
 using System.Net.Http.Headers;
 using System.Text;
+using SpotifyCompanion.Controllers;
 
 namespace SpotifyCompanion
 {
-    public class Client
+    public class App
     {
-        public static HttpClient client { get; } = new();
+        public static HttpClient Client { get; } = new();
         private readonly LocalStorage _storage = new();
         private readonly string _clientId;
         private readonly string _clientSecret;
         private bool _clientIsRunning;
 
-        public Client(string clientId, string clientSecret)
+        public App(string clientId, string clientSecret)
         {
             _clientId = clientId;
             _clientSecret = clientSecret;
 
-            client.BaseAddress = new Uri(AppDetails.BaseAdress);
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            Client.BaseAddress = new Uri(AppDetails.BaseAdress);
+            Client.DefaultRequestHeaders.Accept.Clear();
+            Client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             var credentials = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{_clientId}:{_clientSecret}"));
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", credentials);
+            Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", credentials);
 
             _clientIsRunning = true;
         }
@@ -32,7 +33,7 @@ namespace SpotifyCompanion
         {
             if (!File.Exists(".localstorage"))
             {
-                AuthResponse loginInfo = OAuth2.Authorize(_clientId, _clientSecret);
+                AuthResponse loginInfo = OAuth2.Authorize(_clientId);
 
                 _storage.Store("access_token", loginInfo.access_token);
                 _storage.Store("token_type", loginInfo.token_type);
@@ -47,7 +48,7 @@ namespace SpotifyCompanion
                 await RefreshTokenIfNeeded();
             }
 
-            client.DefaultRequestHeaders.Authorization =
+            Client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", _storage.Get<string>("access_token"));
         }
 
@@ -62,17 +63,17 @@ namespace SpotifyCompanion
                         _clientIsRunning = false;
                         break;
                     case ConsoleKey.UpArrow:
-                        await Player.Player.GetRecentlyPlayedTracks();
+                        await PlayerController.GetRecentlyPlayedTracks();
                         break;
                     case ConsoleKey.F6:
-                        User.User.FollowPlaylist("7wJufnewhs4Ue8MpeJ7hIe");
+                        UserController.FollowPlaylist("7wJufnewhs4Ue8MpeJ7hIe");
                         break;
                     case ConsoleKey.RightArrow:
-                        var user = await User.User.GetCurrentUser();
+                        var user = await UserController.GetCurrentUser();
                         Console.WriteLine(user.email);
                         break;
                     case ConsoleKey.F8:
-                        User.User.UnfollowPlaylist("7wJufnewhs4Ue8MpeJ7hIe");
+                        UserController.UnfollowPlaylist("7wJufnewhs4Ue8MpeJ7hIe");
                         break;
                 }
             }

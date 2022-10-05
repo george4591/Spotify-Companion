@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SpotifyCompanion.Utils;
+﻿using SpotifyCompanion.Utils;
 
-namespace SpotifyCompanion.Artist
+namespace SpotifyCompanion.Controllers
 {
-    public static class Artist
+    public static class ArtistController
     {
         private static readonly string _entrypoint = "https://api.spotify.com/v1/artists";
 

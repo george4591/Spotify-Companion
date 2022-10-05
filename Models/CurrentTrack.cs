@@ -67,7 +67,7 @@ namespace SpotifyCompanion.Models
             public string uri { get; set; }
         }
 
-        // public class Artist
+        // public class ArtistController
         // {
         //     public External_Urls external_urls { get; set; }
         //     public string href { get; set; }
